@@ -8,7 +8,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>হিসাব খাতা v7.0 — প্যারালেলোগ্রাম স্টাইল</title>
 
-    <!-- PWA Manifest (নতুন সংযোজন) -->
     <link rel="manifest" href="manifest.json">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -346,6 +345,22 @@
             font-size: 14px;
             color: var(--text);
             transform: skewX(-12deg);
+        }
+        /* লেনদেন পৃষ্ঠার নেভিগেশন বাটন ব্যাকগ্রাউন্ড স্বচ্ছ */
+        .month-trans-nav .nav-group button {
+            background: transparent !important;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            font-size: 13px;
+            transform: skewX(-12deg);
+            color: var(--text);
+            font-weight: 600;
+            min-width: 44px;
+            min-height: 44px;
+        }
+        .month-trans-nav .nav-group button:hover {
+            background: var(--primary-light) !important;
+            border-color: var(--accent);
         }
         .controls {
             display: flex;
@@ -709,7 +724,6 @@
             border-color: var(--accent-hover);
             box-shadow: var(--shadow-sm);
         }
-        /* নতুন রিপোর্ট স্টাইল – বাটন স্টাইলে কার্ড */
         .report-summary-cards {
             display: flex;
             gap: 16px;
@@ -992,8 +1006,6 @@
             margin-top: 6px;
             width: 100%;
         }
-
-        /* ───── নতুন রিমোট কন্ট্রোল ওভারলে / আপডেট মডাল ───── */
         #appDisabledOverlay {
             display: none;
             position: fixed;
@@ -1131,7 +1143,6 @@
     <div class="budget-dropdown" id="budgetDropdown"></div>
     <div class="budget-dropdown" id="periodDropdown"><div class="budget-item"><span class="cat-name" data-period="weekly">সাপ্তাহিক</span></div><div class="budget-item"><span class="cat-name" data-period="monthly">মাসিক</span></div><div class="budget-item"><span class="cat-name" data-period="yearly">বার্ষিক</span></div></div>
 
-    <!-- ══════════════ রিমোট কন্ট্রোল এলিমেন্ট (নতুন) ══════════════ -->
     <div id="appDisabledOverlay">
         <div class="msg-box"><span>⏸️ অ্যাপটি সাময়িকভাবে বন্ধ আছে</span></div>
         <button id="retryRemoteCheck" class="btn btn-blue" style="margin-top:24px;">🔄 আবার চেষ্টা করুন</button>
@@ -1190,13 +1201,85 @@
             function getPeriodKey(period, offset) { let now = new Date(); if (period === 'monthly') { let d = new Date(now.getFullYear(), now.getMonth() + offset, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); } else if (period === 'weekly') { let day = now.getDay(); let sunday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + offset * 7); return sunday.toISOString().split('T')[0]; } else return String(now.getFullYear() + offset); }
             function getSummaryMonthLabel() { let n = new Date(), t = new Date(n.getFullYear(), n.getMonth() + summaryMonthOffset, 1); return t.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(t.getFullYear()).slice(-2); }
             function ub() { let sd = getSummaryData(), inc = 0, exp = 0; sd.forEach(t => { if (t.type === 'income') inc += t.amount; else exp += t.amount; }); let bal = inc - exp; document.getElementById('rightIncome').textContent = fm(inc); document.getElementById('rightExpense').textContent = fm(exp); let be = document.getElementById('rightBalance'); be.textContent = fm(bal); be.style.color = bal < 0 ? 'var(--danger)' : 'var(--income)'; document.getElementById('summaryMonthLabel').textContent = getSummaryMonthLabel(); let now = new Date(), navDate = new Date(now.getFullYear(), now.getMonth() + budgetNavMonthOffset, 1); document.getElementById('budgetMonthLabel').textContent = navDate.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(navDate.getFullYear()).slice(-2); let budgetAmount = 0; if (selectedBudgetCat && budgets[selectedBudgetCat]) { let key = budgetPeriod === 'monthly' ? getPeriodKey('monthly', budgetNavMonthOffset) : getPeriodKey(budgetPeriod, budgetOffset); budgetAmount = budgets[selectedBudgetCat]?.[budgetPeriod]?.[key] || 0; } let sp = cs(), rm = budgetAmount - sp; document.getElementById('leftBudget').textContent = fm(budgetAmount); document.getElementById('leftSpent').textContent = fm(sp); let re = document.getElementById('leftRemain'); re.textContent = fm(rm); re.style.color = rm >= 0 ? 'var(--income)' : 'var(--danger)'; document.getElementById('budgetCatBtn').textContent = (selectedBudgetCat || 'বাজেট') + ' ▼'; document.getElementById('budgetPeriodBtn').textContent = (budgetPeriod === 'weekly' ? 'সাপ্তাহিক' : budgetPeriod === 'yearly' ? 'বার্ষিক' : 'মাসিক') + ' ▼'; document.getElementById('editBudgetIcon').style.display = selectedBudgetCat ? 'inline-flex' : 'none'; document.getElementById('deleteBudgetIcon').style.display = selectedBudgetCat ? 'inline-flex' : 'none'; }
-            function sv() { let ds = document.getElementById('txDesc').value.trim(), am = parseFloat(document.getElementById('txAmount').value), tp = txTypeValue, ct = document.getElementById('txCategory').value, nt = document.getElementById('txNote').value.trim(), dateStr = txCustomDate.toISOString().split('T')[0]; if (!ds || isNaN(am) || am <= 0) return alert('সঠিক তথ্য দিন'); if (editingId) { let i = transactions.findIndex(t => t.id === editingId); if (i !== -1) { transactions[i] = { ...transactions[i], date: dateStr, desc: ds, amount: am, type: tp, category: ct, note: nt, imageData: currentImageData }; if (currentImageData) IMG.set(editingId, currentImageData); else IMG.delete(editingId); } editingId = null; } else { let nid = id(); transactions.push({ id: nid, date: dateStr, desc: ds, amount: am, type: tp, category: ct, note: nt, imageData: currentImageData }); if (currentImageData) IMG.set(nid, currentImageData); } s(LS.tx, transactions); cm('modalTx'); refreshCurrentPage(); }
+            // স্থানীয় তারিখ ফরম্যাট YYYY-MM-DD প্রস্তুত করার ফাংশন (টাইমজোন সমস্যা সমাধান)
+            function getLocalDateString(date) {
+                let year = date.getFullYear();
+                let month = String(date.getMonth() + 1).padStart(2, '0');
+                let day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            function sv() { 
+                let ds = document.getElementById('txDesc').value.trim(), 
+                    am = parseFloat(document.getElementById('txAmount').value), 
+                    tp = txTypeValue, 
+                    ct = document.getElementById('txCategory').value, 
+                    nt = document.getElementById('txNote').value.trim(), 
+                    dateStr = getLocalDateString(txCustomDate);
+                if (!ds || isNaN(am) || am <= 0) return alert('সঠিক তথ্য দিন'); 
+                if (editingId) { 
+                    let i = transactions.findIndex(t => t.id === editingId); 
+                    if (i !== -1) { 
+                        transactions[i] = { ...transactions[i], date: dateStr, desc: ds, amount: am, type: tp, category: ct, note: nt, imageData: currentImageData }; 
+                        if (currentImageData) IMG.set(editingId, currentImageData); else IMG.delete(editingId); 
+                    } 
+                    editingId = null; 
+                } else { 
+                    let nid = id(); 
+                    transactions.push({ id: nid, date: dateStr, desc: ds, amount: am, type: tp, category: ct, note: nt, imageData: currentImageData }); 
+                    if (currentImageData) IMG.set(nid, currentImageData); 
+                } 
+                s(LS.tx, transactions); 
+                cm('modalTx'); 
+                refreshCurrentPage(); 
+            }
             function cm(mid) { document.getElementById(mid).classList.remove('open'); editingId = null; currentImageData = null; }
             let txTypeValue = 'expense';
             document.getElementById('btnTypeExpense').onclick = function() { txTypeValue = 'expense'; this.classList.add('active'); document.getElementById('btnTypeIncome').classList.remove('active'); };
             document.getElementById('btnTypeIncome').onclick = function() { txTypeValue = 'income'; this.classList.add('active'); document.getElementById('btnTypeExpense').classList.remove('active'); };
-            function ot() { document.getElementById('txTitle').textContent = 'নতুন লেনদেন'; txCustomDate = new Date(); updateDateWidget('txDate', txCustomDate); document.getElementById('txDesc').value = ''; document.getElementById('txAmount').value = ''; txTypeValue = 'expense'; document.getElementById('btnTypeExpense').classList.add('active'); document.getElementById('btnTypeIncome').classList.remove('active'); document.getElementById('txNote').value = ''; document.getElementById('txImage').value = ''; document.getElementById('imagePreview').innerHTML = ''; currentImageData = null; let sl = document.getElementById('txCategory'); sl.innerHTML = ''; ac().forEach(c => sl.innerHTML += `<option value="${c}">${c}</option>`); document.getElementById('modalTx').classList.add('open'); }
-            function et(tx) { editingId = tx.id; document.getElementById('txTitle').textContent = 'লেনদেন সম্পাদনা'; txCustomDate = new Date(tx.date + 'T00:00:00'); updateDateWidget('txDate', txCustomDate); document.getElementById('txDesc').value = tx.desc; document.getElementById('txAmount').value = tx.amount; txTypeValue = tx.type; if (tx.type === 'expense') { document.getElementById('btnTypeExpense').classList.add('active'); document.getElementById('btnTypeIncome').classList.remove('active'); } else { document.getElementById('btnTypeIncome').classList.add('active'); document.getElementById('btnTypeExpense').classList.remove('active'); } document.getElementById('txNote').value = tx.note || ''; document.getElementById('txImage').value = ''; currentImageData = IMG.get(tx.id) || null; document.getElementById('imagePreview').innerHTML = currentImageData ? `<img src="${currentImageData}">` : ''; let sl = document.getElementById('txCategory'); sl.innerHTML = ''; ac().forEach(c => sl.innerHTML += `<option value="${c}" ${c===tx.category?'selected':''}>${c}</option>`); document.getElementById('modalTx').classList.add('open'); }
+            function ot() { 
+                document.getElementById('txTitle').textContent = 'নতুন লেনদেন'; 
+                const now = new Date();
+                txCustomDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                updateDateWidget('txDate', txCustomDate); 
+                document.getElementById('txDesc').value = ''; 
+                document.getElementById('txAmount').value = ''; 
+                txTypeValue = 'expense'; 
+                document.getElementById('btnTypeExpense').classList.add('active'); 
+                document.getElementById('btnTypeIncome').classList.remove('active'); 
+                document.getElementById('txNote').value = ''; 
+                document.getElementById('txImage').value = ''; 
+                document.getElementById('imagePreview').innerHTML = ''; 
+                currentImageData = null; 
+                let sl = document.getElementById('txCategory'); 
+                sl.innerHTML = ''; 
+                ac().forEach(c => sl.innerHTML += `<option value="${c}">${c}</option>`); 
+                document.getElementById('modalTx').classList.add('open'); 
+            }
+            function et(tx) { 
+                editingId = tx.id; 
+                document.getElementById('txTitle').textContent = 'লেনদেন সম্পাদনা'; 
+                let parts = tx.date.split('-');
+                txCustomDate = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+                updateDateWidget('txDate', txCustomDate); 
+                document.getElementById('txDesc').value = tx.desc; 
+                document.getElementById('txAmount').value = tx.amount; 
+                txTypeValue = tx.type; 
+                if (tx.type === 'expense') { 
+                    document.getElementById('btnTypeExpense').classList.add('active'); 
+                    document.getElementById('btnTypeIncome').classList.remove('active'); 
+                } else { 
+                    document.getElementById('btnTypeIncome').classList.add('active'); 
+                    document.getElementById('btnTypeExpense').classList.remove('active'); 
+                } 
+                document.getElementById('txNote').value = tx.note || ''; 
+                document.getElementById('txImage').value = ''; 
+                currentImageData = IMG.get(tx.id) || null; 
+                document.getElementById('imagePreview').innerHTML = currentImageData ? `<img src="${currentImageData}">` : ''; 
+                let sl = document.getElementById('txCategory'); 
+                sl.innerHTML = ''; 
+                ac().forEach(c => sl.innerHTML += `<option value="${c}" ${c===tx.category?'selected':''}>${c}</option>`); 
+                document.getElementById('modalTx').classList.add('open'); 
+            }
             function updateDateWidget(wid, date) { document.getElementById(wid + 'Text').textContent = formatDDMMYYYY(date); }
             function formatDDMMYYYY(date) { let d = date.getDate().toString().padStart(2, '0'), m = (date.getMonth() + 1).toString().padStart(2, '0'), y = date.getFullYear(); return `${d}-${m}-${y}`; }
             function parseDDMMYYYY(str) { let parts = str.split('-'); if (parts.length === 3) return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0])); return new Date(); }
@@ -1213,7 +1296,6 @@
             document.querySelectorAll('.bottom-nav button').forEach(btn => { btn.onclick = function(e) { let pg = this.dataset.page; if (pg === 'home') setPage('home'); else if (pg === 'transactions') setPage('transactions'); else if (pg === 'add') ot(); else if (pg === 'report') orp(); else if (pg === 'tools') otl(); }; });
             let currentReportMonth = new Date(); currentReportMonth.setDate(1);
             function getTransactionsForMonth(date) { let year = date.getFullYear(), month = date.getMonth(); let start = new Date(year, month, 1).toISOString().split('T')[0]; let end = new Date(year, month + 1, 0).toISOString().split('T')[0]; return transactions.filter(tx => tx.date >= start && tx.date <= end); }
-            // নতুন রিপোর্ট ফাংশন – বাটন স্টাইলে ক্যাটাগরি কার্ড + সামারি কার্ড
             function generateReportHTML(date) {
                 let txns = getTransactionsForMonth(date);
                 let monthName = date.toLocaleString('bn-BD', { month: 'long', year: 'numeric' });
@@ -1230,7 +1312,7 @@
                 for (let cat of allCats) {
                     let expense = expenseByCat.get(cat) || 0;
                     let budgetAmount = (budgets[cat]?.monthly?.[yearMonthKey]) || 0;
-                    if (expense === 0 && budgetAmount === 0) continue; // শুধু যাদের এক্সপেন্স বা বাজেট আছে
+                    if (expense === 0 && budgetAmount === 0) continue;
                     let balanceCat = budgetAmount - expense;
                     categoryData.push({ cat, expense, budget: budgetAmount, balance: balanceCat });
                 }
@@ -1260,7 +1342,6 @@
                 } else {
                     categoryGridHtml = `<div style="margin: 20px 0; padding: 16px; background: var(--primary-light); text-align:center;">📭 এই মাসে কোনো ব্যয় বা বাজেটের ক্যাটাগরি নেই</div>`;
                 }
-                // ট্রানজেকশন টেবিল (বিস্তারিত)
                 let rows = '';
                 txns.sort((a,b) => b.date.localeCompare(a.date)).forEach(t => {
                     let inc = t.type === 'income' ? t.amount : 0;
@@ -1341,7 +1422,7 @@
             document.querySelectorAll('.modal').forEach(m => { m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('open'); }); });
             setPage('home');
 
-            /* ═══════════ রিমোট কন্ট্রোল সিস্টেম (নতুন সংযোজন) ═══════════ */
+            // ========== রিমোট কন্ট্রোল ফাংশন (পূর্ণ) ==========
             const APP_VERSION = 'v7.0';
             let remoteConfigUrl = localStorage.getItem('pwa_remote_config_url') || '';
             let remoteCheckInterval = null;
@@ -1480,12 +1561,9 @@
                 originalOpenTools && originalOpenTools();
                 injectRemoteControlUI();
             };
-
-            /* ── আগের সমস্ত কোড অক্ষত আছে ── */
         })();
     </script>
 
-    <!-- Service Worker রেজিস্ট্রেশন (নতুন সংযোজন) -->
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
