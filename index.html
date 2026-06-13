@@ -36,7 +36,6 @@
             --btn-gray-text:  #334155;
             --btn-purple-bg:  #7c3aed;
             --btn-purple-text:#ffffff;
-            --home-scale:     1;
         }
         .dark {
             --primary:        #4a627a;
@@ -319,6 +318,7 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
+        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শুরু) ---------- */
         .budget-cat-btn,
         .budget-period-btn {
             padding: 6px 12px;
@@ -339,6 +339,7 @@
             font-weight: 700;
             font-size: 11px;
         }
+        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শেষ) ---------- */
         .month-nav-row {
             display: flex;
             align-items: center;
@@ -1062,6 +1063,11 @@
             max-width: 400px;
             text-align: center;
         }
+        /* হোম স্কেলিং wrapper */
+        #homeScaleWrapper {
+            transform-origin: top left;
+            transition: transform 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -1073,43 +1079,47 @@
         </div>
     </div>
 
-    <div class="top-boxes">
-        <div class="stat-box" id="boxLeft">
-            <h3><span>🎯</span> বাজেট</h3>
-            <div class="budget-btns-row">
-                <button class="budget-cat-btn" id="budgetCatBtn">বাজেট ▼</button>
-                <button class="icon-btn" id="editBudgetIcon" style="display:none;">✏️</button>
-                <button class="icon-btn" id="deleteBudgetIcon" style="display:none;">🗑️</button>
-                <button class="budget-period-btn" id="budgetPeriodBtn">মাসিক ▼</button>
+    <!-- হোম কন্টেন্ট (বাজেট/সারাংশ + সার্চ বার) স্কেলিং-এর জন্য wrapper -->
+    <div id="homeScaleWrapper">
+        <div class="top-boxes">
+            <div class="stat-box" id="boxLeft">
+                <h3><span>🎯</span> বাজেট</h3>
+                <div class="budget-btns-row">
+                    <button class="budget-cat-btn" id="budgetCatBtn">বাজেট ▼</button>
+                    <button class="icon-btn" id="editBudgetIcon" style="display:none;">✏️</button>
+                    <button class="icon-btn" id="deleteBudgetIcon" style="display:none;">🗑️</button>
+                    <button class="budget-period-btn" id="budgetPeriodBtn">মাসিক ▼</button>
+                </div>
+                <div class="month-nav-row">
+                    <button id="budgetPrev">◀</button>
+                    <span class="nav-label" id="budgetMonthLabel">মে ২৬</span>
+                    <button id="budgetNext">▶</button>
+                </div>
+                <div class="stat-row"><span class="stat-label">বাজেট</span> <span class="stat-value blue" id="leftBudget">৳ 0.00</span></div>
+                <div class="stat-row"><span class="stat-label">ব্যয়</span> <span class="stat-value orange" id="leftSpent">৳ 0.00</span></div>
+                <div class="stat-row"><span class="stat-label">বাকি</span> <span class="stat-value" id="leftRemain">৳ 0.00</span></div>
             </div>
-            <div class="month-nav-row">
-                <button id="budgetPrev">◀</button>
-                <span class="nav-label" id="budgetMonthLabel">মে ২৬</span>
-                <button id="budgetNext">▶</button>
+            <div class="stat-box" id="boxRight">
+                <h3><span>💰</span> সারাংশ</h3>
+                <div class="month-nav-row">
+                    <button id="summaryPrev">◀</button>
+                    <span class="nav-label" id="summaryMonthLabel">মে ২৬</span>
+                    <button id="summaryNext">▶</button>
+                </div>
+                <div class="stat-row"><span class="stat-label">মোট আয়</span> <span class="stat-value green" id="rightIncome">৳ 0.00</span></div>
+                <div class="stat-row"><span class="stat-label">মোট ব্যয়</span> <span class="stat-value orange" id="rightExpense">৳ 0.00</span></div>
+                <div class="stat-row"><span class="stat-label">ব্যালেন্স</span> <span class="stat-value" id="rightBalance">৳ 0.00</span></div>
             </div>
-            <div class="stat-row"><span class="stat-label">বাজেট</span> <span class="stat-value blue" id="leftBudget">৳ 0.00</span></div>
-            <div class="stat-row"><span class="stat-label">ব্যয়</span> <span class="stat-value orange" id="leftSpent">৳ 0.00</span></div>
-            <div class="stat-row"><span class="stat-label">বাকি</span> <span class="stat-value" id="leftRemain">৳ 0.00</span></div>
         </div>
-        <div class="stat-box" id="boxRight">
-            <h3><span>💰</span> সারাংশ</h3>
-            <div class="month-nav-row">
-                <button id="summaryPrev">◀</button>
-                <span class="nav-label" id="summaryMonthLabel">মে ২৬</span>
-                <button id="summaryNext">▶</button>
-            </div>
-            <div class="stat-row"><span class="stat-label">মোট আয়</span> <span class="stat-value green" id="rightIncome">৳ 0.00</span></div>
-            <div class="stat-row"><span class="stat-label">মোট ব্যয়</span> <span class="stat-value orange" id="rightExpense">৳ 0.00</span></div>
-            <div class="stat-row"><span class="stat-label">ব্যালেন্স</span> <span class="stat-value" id="rightBalance">৳ 0.00</span></div>
+
+        <div class="controls">
+            <input type="month" id="monthFilter" style="flex:0;min-width:120px;">
+            <input type="text" id="searchInput" placeholder="🔍 সার্চ করুন...">
+            <button class="btn btn-gray" id="btnResetMonth">রিসেট</button>
         </div>
     </div>
 
-    <div class="controls">
-        <input type="month" id="monthFilter" style="flex:0;min-width:120px;">
-        <input type="text" id="searchInput" placeholder="🔍 সার্চ করুন...">
-        <button class="btn btn-gray" id="btnResetMonth">রিসেট</button>
-    </div>
-
+    <!-- লেনদেন তালিকা (হোম ও লেনদেন পৃষ্ঠায় ব্যবহৃত) -->
     <div class="tx-list" id="txList"><div class="empty">📭 লেনদেন দেখাতে লেনদেন ট্যাবে ক্লিক করুন</div></div>
 
     <div class="bottom-nav">
@@ -1123,7 +1133,7 @@
     <div class="modal" id="modalTx"><div class="modal-box"><h3 id="txTitle">নতুন লেনদেন</h3><div class="date-widget" id="txDateWidget"><button class="date-arrow prev">◀</button><span class="date-text" id="txDateText">DD-MM-YYYY</span><button class="date-arrow next">▶</button><span class="calendar-icon" id="txCalendarIcon">📅</span><div class="calendar-popup" id="txDateCalendarPopup"></div></div><input type="text" id="txDesc" placeholder="বিবরণ"><input type="number" id="txAmount" placeholder="পরিমাণ (টাকা)" min="0" step="0.01"><div class="type-toggle"><button id="btnTypeExpense" class="active">ব্যয়</button><button id="btnTypeIncome">আয়</button></div><div style="display:flex;gap:6px; align-items:center;"><div class="parallelogram-input-container"><select id="txCategory" class="parallelogram-input"></select></div><button class="btn btn-blue" id="btnAddCat" style="min-width:44px;">+</button></div><div style="display:flex;gap:6px; align-items:center; margin-top:6px;"><div class="file-parallelogram-container"><input type="file" id="txImage" accept="image/*" class="file-parallelogram-input"></div><button class="btn btn-green" id="btnCamera" style="min-width:44px;">📷</button></div><div class="image-preview" id="imagePreview"></div><textarea id="txNote" rows="2" placeholder="নোট (ঐচ্ছিক)"></textarea><div class="modal-actions"><button class="btn" id="btnCancelTx">বাতিল</button><button class="btn btn-blue" id="btnSaveTx">সংরক্ষণ</button></div></div></div>
     <div class="modal" id="modalImageView"><div class="modal-box" style="text-align:center;"><h3>📋 রশিদ ছবি</h3><img id="viewImage" style="max-width:100%;max-height:300px;"><div class="modal-actions"><button class="btn btn-green" id="btnSaveImage">💾 ডাউনলোড</button><button class="btn" id="btnCloseImage">বন্ধ</button></div></div></div>
     <div class="modal" id="modalTools"><div class="modal-box"><h3>🔧 টুলস</h3>
-        <!-- হোম ইন্টারফেস সাইজ কন্ট্রোল (নতুন ফিচার) -->
+        <!-- হোম ইন্টারফেস সাইজ কন্ট্রোল -->
         <div style="margin-bottom: 20px; background: var(--primary-light); padding: 12px; border-left: 3px solid var(--accent);">
             <h4 style="font-size:13px;font-weight:800; margin-bottom:8px;">🏠 হোম ইন্টারফেস সাইজ</h4>
             <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
@@ -1365,54 +1375,26 @@
                 document.querySelectorAll('.tx-edit-btn').forEach(btn => btn.onclick = (e) => { let tx = transactions.find(t => t.id === btn.dataset.id); if (tx) et(tx); });
                 document.querySelectorAll('.tx-delete-btn').forEach(btn => btn.onclick = (e) => { if (confirm('মুছে ফেলবেন?')) { transactions = transactions.filter(t => t.id !== btn.dataset.id); IMG.delete(btn.dataset.id); s(LS.tx, transactions); refreshCurrentPage(); } });
             }
-            // উন্নত স্কেলিং ফাংশন - সব হোম এলিমেন্ট একসাথে স্কেল হবে এবং গ্যাপ/প্যাডিং অনুপাতিক হবে
+            // হোম স্কেলিং প্রয়োগ (wrapper + tx-list)
             function applyHomeScale() {
+                const wrapper = document.getElementById('homeScaleWrapper');
+                const txList = document.getElementById('txList');
                 const percent = parseFloat(localStorage.getItem(LS.homeScale) || '100');
                 const scale = percent / 100;
-                const homeContainers = ['.top-boxes', '.controls', '.tx-list'];
                 if (currentActivePage === 'home') {
-                    homeContainers.forEach(sel => {
-                        const el = document.querySelector(sel);
-                        if (el) {
-                            el.style.transform = `scale(${scale})`;
-                            el.style.transformOrigin = 'top left';
-                            el.style.transition = 'transform 0.2s ease';
-                            el.style.width = `${100 / scale}%`;
-                        }
-                    });
-                    // স্কেল অনুযায়ী gap এবং padding অ্যাডজাস্ট করুন যাতে সবকিছু আনুপাতিক দেখায়
-                    const topBoxes = document.querySelector('.top-boxes');
-                    if (topBoxes) topBoxes.style.gap = `${16 * scale}px`;
-                    const controlsDiv = document.querySelector('.controls');
-                    if (controlsDiv) controlsDiv.style.gap = `${10 * scale}px`;
-                    const monthNavRows = document.querySelectorAll('.month-nav-row');
-                    monthNavRows.forEach(row => row.style.gap = `${10 * scale}px`);
-                    // বাটনগুলোর প্যাডিং স্কেল করা (ঐচ্ছিক, কিন্তু ব্যবহারকারীর চাহিদা অনুযায়ী)
-                    document.querySelectorAll('.controls input, .controls .btn').forEach(el => {
-                        el.style.padding = `0 ${14 * scale}px`;
-                        el.style.fontSize = `${14 * scale}px`;
-                        el.style.minHeight = `${44 * scale}px`;
-                    });
+                    if (wrapper) {
+                        wrapper.style.transform = `scale(${scale})`;
+                        wrapper.style.width = `${100 / scale}%`;
+                    }
+                    if (txList) {
+                        txList.style.transform = `scale(${scale})`;
+                        txList.style.transformOrigin = 'top left';
+                        txList.style.width = `${100 / scale}%`;
+                        txList.style.marginBottom = `${-(txList.scrollHeight * (1 - scale))}px`;
+                    }
                 } else {
-                    homeContainers.forEach(sel => {
-                        const el = document.querySelector(sel);
-                        if (el) {
-                            el.style.transform = '';
-                            el.style.width = '';
-                        }
-                    });
-                    // রিসেট
-                    const topBoxes = document.querySelector('.top-boxes');
-                    if (topBoxes) topBoxes.style.gap = '';
-                    const controlsDiv = document.querySelector('.controls');
-                    if (controlsDiv) controlsDiv.style.gap = '';
-                    const monthNavRows = document.querySelectorAll('.month-nav-row');
-                    monthNavRows.forEach(row => row.style.gap = '');
-                    document.querySelectorAll('.controls input, .controls .btn').forEach(el => {
-                        el.style.padding = '';
-                        el.style.fontSize = '';
-                        el.style.minHeight = '';
-                    });
+                    if (wrapper) { wrapper.style.transform = ''; wrapper.style.width = ''; }
+                    if (txList) { txList.style.transform = ''; txList.style.transformOrigin = ''; txList.style.width = ''; txList.style.marginBottom = ''; }
                 }
                 const slider = document.getElementById('homeScaleSlider');
                 const label = document.getElementById('scalePercentLabel');
@@ -1434,20 +1416,17 @@
             };
             function refreshCurrentPage() { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); applyHomeScale(); } else if (currentActivePage === 'transactions') renderMonthTransactions(); }
             function setPage(page) { 
-                const topBoxes = document.querySelector('.top-boxes'); 
-                const controls = document.querySelector('.controls'); 
+                const wrapper = document.getElementById('homeScaleWrapper');
                 const txContainer = document.getElementById('txList'); 
                 if (page === 'home') { 
-                    topBoxes.style.display = 'grid'; 
-                    controls.style.display = 'flex'; 
+                    if (wrapper) wrapper.style.display = '';
                     txContainer.style.display = 'block'; 
                     currentActivePage = 'home'; 
                     ub(); 
                     renderHomeTransactions(); 
                     applyHomeScale();
                 } else if (page === 'transactions') { 
-                    topBoxes.style.display = 'none'; 
-                    controls.style.display = 'none'; 
+                    if (wrapper) wrapper.style.display = 'none';
                     txContainer.style.display = 'block'; 
                     currentActivePage = 'transactions'; 
                     transMonthOffset = 0; 
