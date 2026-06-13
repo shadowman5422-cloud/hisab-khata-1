@@ -318,6 +318,28 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
+        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শুরু) ---------- */
+        .budget-cat-btn,
+        .budget-period-btn {
+            padding: 6px 12px;
+            min-height: 36px;
+            font-size: 12px;
+        }
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+        }
+        .month-nav-row button {
+            padding: 3px 8px;
+            font-size: 11px;
+        }
+        .month-nav-row .nav-label {
+            padding: 3px 10px;
+            font-weight: 700;
+            font-size: 11px;
+        }
+        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শেষ) ---------- */
         .month-nav-row {
             display: flex;
             align-items: center;
@@ -981,23 +1003,6 @@
             color: var(--text);
             font-weight: 500;
         }
-        .budget-cat-btn,
-        .budget-period-btn {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-weight: 600;
-        }
-        .budget-cat-btn:hover,
-        .budget-period-btn:hover {
-            background: var(--primary-light);
-            border-color: var(--accent);
-        }
-        .icon-btn {
-            background: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
         .icon-btn:hover {
             background: var(--primary-light);
             border-color: var(--accent);
@@ -1194,14 +1199,43 @@
             function getMonthRange(offset) { let today = new Date(); let target = new Date(today.getFullYear(), today.getMonth() + offset, 1); let year = target.getFullYear(), month = target.getMonth(); let start = new Date(year, month, 1); let end = new Date(year, month + 1, 0); let startStr = start.toISOString().split('T')[0]; let endStr = end.toISOString().split('T')[0]; let label = target.toLocaleString('bn-BD', { month: 'long', year: 'numeric' }); return { start: startStr, end: endStr, label }; }
             function renderMonthTransactions() { const container = document.getElementById('txList'); if (!container) return; const { start, end, label } = getMonthRange(transMonthOffset); const filtered = transactions.filter(tx => tx.date >= start && tx.date <= end); let groups = {}; filtered.forEach(tx => { if (!groups[tx.date]) groups[tx.date] = []; groups[tx.date].push(tx); }); let monthIncome = 0, monthExpense = 0; let html = `<div class="month-trans-nav"><div class="nav-group"><button class="month-prev-btn" id="transMonthPrevBtn">◀</button><span class="nav-label">${label}</span><button class="month-next-btn" id="transMonthNextBtn">▶</button></div><div class="month-total-box"><span>📈 আয়: ${fm(0)}</span><span>📉 ব্যয়: ${fm(0)}</span><span>⚖️ উদ্বৃত্ত: ${fm(0)}</span></div></div>`; if (Object.keys(groups).length === 0) { html += `<div class="empty">📭 ${label} মাসে কোনো লেনদেন নেই</div>`; container.innerHTML = html; attachTransNavEvents(); return; } Object.keys(groups).sort((a, b) => b.localeCompare(a)).forEach(date => { let txns = groups[date]; let dayInc = 0, dayExp = 0; let table = `<table class="tx-day-table"><thead><tr class="date-header-row"><td colspan="5">📅 ${formatDateWithWeekday(date)}</td></tr></thead><thead><tr><th>বিবরণ</th><th>ক্যাটাগরি</th><th>আয়</th><th>ব্যয়</th><th>অ্যাকশন</th></tr></thead><tbody>`; txns.forEach(tx => { let inc = tx.type === 'income' ? tx.amount : 0; let exp = tx.type === 'expense' ? tx.amount : 0; dayInc += inc; dayExp += exp; monthIncome += inc; monthExpense += exp; table += `<tr data-id="${tx.id}"><td>${tx.desc}</td><td>${tx.category}</td><td class="income-amount">${inc?fm(inc):''}</td><td class="expense-amount">${exp?fm(exp):''}</td><td><button class="tx-edit-btn" data-id="${tx.id}">✏️</button> <button class="tx-delete-btn" data-id="${tx.id}">🗑️</button></td></tr>`; }); table += `</tbody><tfoot><tr><td colspan="2"><strong>দিনের যোগফল</strong></td><td class="income-amount"><strong>${fm(dayInc)}</strong></td><td class="expense-amount"><strong>${fm(dayExp)}</strong></td><td></td></tr></tfoot></table>`; html += table; }); const balanceMonth = monthIncome - monthExpense; const totalBoxHtml = `<div class="month-total-box"><span>📈 আয়: ${fm(monthIncome)}</span><span>📉 ব্যয়: ${fm(monthExpense)}</span><span>⚖️ উদ্বৃত্ত: ${fm(balanceMonth)}</span></div>`; html = html.replace(/<div class="month-total-box">.*?<\/div>/, totalBoxHtml); container.innerHTML = html; attachTransNavEvents(); }
             function attachTransNavEvents() { let prevBtn = document.getElementById('transMonthPrevBtn'); let nextBtn = document.getElementById('transMonthNextBtn'); if (prevBtn) prevBtn.onclick = () => { transMonthOffset--; renderMonthTransactions(); }; if (nextBtn) nextBtn.onclick = () => { transMonthOffset++; renderMonthTransactions(); }; document.querySelectorAll('.tx-edit-btn').forEach(btn => btn.onclick = (e) => { let tx = transactions.find(t => t.id === btn.dataset.id); if (tx) et(tx); }); document.querySelectorAll('.tx-delete-btn').forEach(btn => btn.onclick = (e) => { if (confirm('মুছে ফেলবেন?')) { transactions = transactions.filter(t => t.id !== btn.dataset.id); IMG.delete(btn.dataset.id); s(LS.tx, transactions); refreshCurrentPage(); } }); }
+            function isFilterActive() {
+                return document.getElementById('monthFilter').value !== '' || document.getElementById('searchInput').value.trim() !== '';
+            }
             function gf() { let d = [...transactions]; let m = document.getElementById('monthFilter').value; if (m) d = d.filter(t => t.date.startsWith(m)); let q = document.getElementById('searchInput').value.trim().toLowerCase(); if (q) d = d.filter(t => t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q)); return d.sort((a, b) => new Date(b.date) - new Date(a.date)); }
-            function getSummaryData() { let n = new Date(), t = new Date(n.getFullYear(), n.getMonth() + summaryMonthOffset, 1); let st = new Date(t.getFullYear(), t.getMonth(), 1).toISOString().split('T')[0], en = new Date(t.getFullYear(), t.getMonth() + 1, 0).toISOString().split('T')[0]; return transactions.filter(tx => tx.date >= st && tx.date <= en); }
+            function getSummaryData() { 
+                let mf = document.getElementById('monthFilter').value;
+                if (mf) {
+                    let [y, m] = mf.split('-').map(Number);
+                    let st = new Date(y, m-1, 1).toISOString().split('T')[0];
+                    let en = new Date(y, m, 0).toISOString().split('T')[0];
+                    let filtered = transactions.filter(tx => tx.date >= st && tx.date <= en);
+                    let q = document.getElementById('searchInput').value.trim().toLowerCase();
+                    if (q) filtered = filtered.filter(t => t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
+                    return filtered;
+                }
+                let n = new Date(), t = new Date(n.getFullYear(), n.getMonth() + summaryMonthOffset, 1);
+                let st = new Date(t.getFullYear(), t.getMonth(), 1).toISOString().split('T')[0];
+                let en = new Date(t.getFullYear(), t.getMonth() + 1, 0).toISOString().split('T')[0];
+                let filtered = transactions.filter(tx => tx.date >= st && tx.date <= en);
+                let q = document.getElementById('searchInput').value.trim().toLowerCase();
+                if (q) filtered = filtered.filter(t => t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q));
+                return filtered;
+            }
             function cs() { if (!selectedBudgetCat) return 0; let { s: st, e: en } = pd(); return transactions.filter(t => t.type === 'expense' && t.category === selectedBudgetCat && t.date >= st && t.date <= en).reduce((a, t) => a + t.amount, 0); }
             function pd() { let n = budgetCustomDate || new Date(); if (budgetPeriod === 'weekly') { let d = n.getDay(); let st = new Date(n.getFullYear(), n.getMonth(), n.getDate() - d + (budgetOffset * 7)); let en = new Date(st); en.setDate(st.getDate() + 6); return { s: st.toISOString().split('T')[0], e: en.toISOString().split('T')[0] }; } else if (budgetPeriod === 'monthly') { let t = new Date(n.getFullYear(), n.getMonth() + budgetOffset, 1); return { s: new Date(t.getFullYear(), t.getMonth(), 1).toISOString().split('T')[0], e: new Date(t.getFullYear(), t.getMonth() + 1, 0).toISOString().split('T')[0] }; } else { let y = n.getFullYear() + budgetOffset; return { s: new Date(y, 0, 1).toISOString().split('T')[0], e: new Date(y, 11, 31).toISOString().split('T')[0] }; } }
             function getPeriodKey(period, offset) { let now = new Date(); if (period === 'monthly') { let d = new Date(now.getFullYear(), now.getMonth() + offset, 1); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); } else if (period === 'weekly') { let day = now.getDay(); let sunday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + offset * 7); return sunday.toISOString().split('T')[0]; } else return String(now.getFullYear() + offset); }
-            function getSummaryMonthLabel() { let n = new Date(), t = new Date(n.getFullYear(), n.getMonth() + summaryMonthOffset, 1); return t.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(t.getFullYear()).slice(-2); }
+            function getSummaryMonthLabel() { 
+                let mf = document.getElementById('monthFilter').value;
+                if (mf) {
+                    let [y, m] = mf.split('-').map(Number);
+                    let d = new Date(y, m-1, 1);
+                    return d.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(d.getFullYear()).slice(-2);
+                }
+                let n = new Date(), t = new Date(n.getFullYear(), n.getMonth() + summaryMonthOffset, 1);
+                return t.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(t.getFullYear()).slice(-2);
+            }
             function ub() { let sd = getSummaryData(), inc = 0, exp = 0; sd.forEach(t => { if (t.type === 'income') inc += t.amount; else exp += t.amount; }); let bal = inc - exp; document.getElementById('rightIncome').textContent = fm(inc); document.getElementById('rightExpense').textContent = fm(exp); let be = document.getElementById('rightBalance'); be.textContent = fm(bal); be.style.color = bal < 0 ? 'var(--danger)' : 'var(--income)'; document.getElementById('summaryMonthLabel').textContent = getSummaryMonthLabel(); let now = new Date(), navDate = new Date(now.getFullYear(), now.getMonth() + budgetNavMonthOffset, 1); document.getElementById('budgetMonthLabel').textContent = navDate.toLocaleString('bn-BD', { month: 'short' }) + ' ' + String(navDate.getFullYear()).slice(-2); let budgetAmount = 0; if (selectedBudgetCat && budgets[selectedBudgetCat]) { let key = budgetPeriod === 'monthly' ? getPeriodKey('monthly', budgetNavMonthOffset) : getPeriodKey(budgetPeriod, budgetOffset); budgetAmount = budgets[selectedBudgetCat]?.[budgetPeriod]?.[key] || 0; } let sp = cs(), rm = budgetAmount - sp; document.getElementById('leftBudget').textContent = fm(budgetAmount); document.getElementById('leftSpent').textContent = fm(sp); let re = document.getElementById('leftRemain'); re.textContent = fm(rm); re.style.color = rm >= 0 ? 'var(--income)' : 'var(--danger)'; document.getElementById('budgetCatBtn').textContent = (selectedBudgetCat || 'বাজেট') + ' ▼'; document.getElementById('budgetPeriodBtn').textContent = (budgetPeriod === 'weekly' ? 'সাপ্তাহিক' : budgetPeriod === 'yearly' ? 'বার্ষিক' : 'মাসিক') + ' ▼'; document.getElementById('editBudgetIcon').style.display = selectedBudgetCat ? 'inline-flex' : 'none'; document.getElementById('deleteBudgetIcon').style.display = selectedBudgetCat ? 'inline-flex' : 'none'; }
-            // স্থানীয় তারিখ ফরম্যাট YYYY-MM-DD প্রস্তুত করার ফাংশন (টাইমজোন সমস্যা সমাধান)
             function getLocalDateString(date) {
                 let year = date.getFullYear();
                 let month = String(date.getMonth() + 1).padStart(2, '0');
@@ -1291,9 +1325,89 @@
             document.getElementById('btnCamera').onclick = () => { let inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.capture = 'environment'; inp.onchange = e => { if (e.target.files[0]) ri(e.target.files[0]).then(b64 => { currentImageData = b64; document.getElementById('imagePreview').innerHTML = `<img src="${b64}">`; }); }; inp.click(); };
             document.getElementById('txImage').onchange = function() { if (this.files[0]) ri(this.files[0]).then(b64 => { currentImageData = b64; document.getElementById('imagePreview').innerHTML = `<img src="${b64}">`; }); };
             let currentActivePage = 'home';
-            function refreshCurrentPage() { if (currentActivePage === 'home') ub(); else if (currentActivePage === 'transactions') renderMonthTransactions(); }
-            function setPage(page) { const topBoxes = document.querySelector('.top-boxes'); const controls = document.querySelector('.controls'); const txContainer = document.getElementById('txList'); if (page === 'home') { topBoxes.style.display = 'grid'; controls.style.display = 'flex'; txContainer.style.display = 'none'; currentActivePage = 'home'; ub(); } else if (page === 'transactions') { topBoxes.style.display = 'none'; controls.style.display = 'none'; txContainer.style.display = 'block'; currentActivePage = 'transactions'; transMonthOffset = 0; renderMonthTransactions(); } document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active')); if (page === 'home') document.querySelector('.bottom-nav button[data-page="home"]').classList.add('active'); else if (page === 'transactions') document.querySelector('.bottom-nav button[data-page="transactions"]').classList.add('active'); }
-            document.querySelectorAll('.bottom-nav button').forEach(btn => { btn.onclick = function(e) { let pg = this.dataset.page; if (pg === 'home') setPage('home'); else if (pg === 'transactions') setPage('transactions'); else if (pg === 'add') ot(); else if (pg === 'report') orp(); else if (pg === 'tools') otl(); }; });
+            function renderHomeTransactions() {
+                const container = document.getElementById('txList');
+                if (!isFilterActive()) {
+                    container.innerHTML = '<div class="empty">📭 লেনদেন দেখাতে লেনদেন ট্যাবে ক্লিক করুন</div>';
+                    return;
+                }
+                const filtered = gf();
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="empty">📭 কোনো লেনদেন পাওয়া যায়নি</div>';
+                    return;
+                }
+                let totalInc = 0, totalExp = 0;
+                let rows = '';
+                filtered.forEach(tx => {
+                    let inc = tx.type === 'income' ? tx.amount : 0;
+                    let exp = tx.type === 'expense' ? tx.amount : 0;
+                    totalInc += inc;
+                    totalExp += exp;
+                    rows += `<tr data-id="${tx.id}"><td>${tx.date}</td><td>${tx.category}</td><td class="income-amount">${inc?fm(inc):''}</td><td class="expense-amount">${exp?fm(exp):''}</td><td><button class="tx-edit-btn" data-id="${tx.id}">✏️</button> <button class="tx-delete-btn" data-id="${tx.id}">🗑️</button></td></tr>`;
+                });
+                let balance = totalInc - totalExp;
+                let html = `<table class="tx-day-table">
+                    <thead><tr><th>তারিখ</th><th>ক্যাটাগরি</th><th>আয়</th><th>ব্যয়</th><th>অ্যাকশন</th></tr></thead>
+                    <tbody>${rows}</tbody>
+                    <tfoot><tr><td colspan="2"><strong>মোট</strong></td><td class="income-amount"><strong>${fm(totalInc)}</strong></td><td class="expense-amount"><strong>${fm(totalExp)}</strong></td><td></td></tr>
+                    <tr><td colspan="2"><strong>উদ্বৃত্ত</strong></td><td colspan="2"><strong>${fm(balance)}</strong></td><td></td></tr></tfoot>
+                </table>`;
+                container.innerHTML = html;
+                document.querySelectorAll('.tx-edit-btn').forEach(btn => btn.onclick = (e) => { let tx = transactions.find(t => t.id === btn.dataset.id); if (tx) et(tx); });
+                document.querySelectorAll('.tx-delete-btn').forEach(btn => btn.onclick = (e) => { if (confirm('মুছে ফেলবেন?')) { transactions = transactions.filter(t => t.id !== btn.dataset.id); IMG.delete(btn.dataset.id); s(LS.tx, transactions); refreshCurrentPage(); } });
+            }
+            function refreshCurrentPage() { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } else if (currentActivePage === 'transactions') renderMonthTransactions(); }
+            function setPage(page) { 
+                const topBoxes = document.querySelector('.top-boxes'); 
+                const controls = document.querySelector('.controls'); 
+                const txContainer = document.getElementById('txList'); 
+                if (page === 'home') { 
+                    topBoxes.style.display = 'grid'; 
+                    controls.style.display = 'flex'; 
+                    txContainer.style.display = 'block'; 
+                    currentActivePage = 'home'; 
+                    ub(); 
+                    renderHomeTransactions(); 
+                } else if (page === 'transactions') { 
+                    topBoxes.style.display = 'none'; 
+                    controls.style.display = 'none'; 
+                    txContainer.style.display = 'block'; 
+                    currentActivePage = 'transactions'; 
+                    transMonthOffset = 0; 
+                    renderMonthTransactions(); 
+                } else if (page === 'add') { ot(); return; } 
+                  else if (page === 'report') { orp(); return; } 
+                  else if (page === 'tools') { otl(); return; } 
+                document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active')); 
+                if (page === 'home') document.querySelector('.bottom-nav button[data-page="home"]').classList.add('active'); 
+                else if (page === 'transactions') document.querySelector('.bottom-nav button[data-page="transactions"]').classList.add('active'); 
+            }
+            const pageOrder = ['home', 'transactions', 'add', 'report', 'tools'];
+            let touchStartX = 0, touchStartY = 0;
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+                touchStartY = e.changedTouches[0].screenY;
+            }, {passive: true});
+            document.addEventListener('touchend', function(e) {
+                if (!touchStartX || !touchStartY) return;
+                let touchEndX = e.changedTouches[0].screenX;
+                let touchEndY = e.changedTouches[0].screenY;
+                let dx = touchEndX - touchStartX;
+                let dy = touchEndY - touchStartY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+                    let currentIndex = pageOrder.indexOf(currentActivePage);
+                    if (currentIndex === -1) return;
+                    if (dx < 0) { // swipe left -> next page
+                        let nextIndex = (currentIndex + 1) % pageOrder.length;
+                        setPage(pageOrder[nextIndex]);
+                    } else { // swipe right -> previous page
+                        let prevIndex = (currentIndex - 1 + pageOrder.length) % pageOrder.length;
+                        setPage(pageOrder[prevIndex]);
+                    }
+                }
+                touchStartX = 0; touchStartY = 0;
+            });
+            document.querySelectorAll('.bottom-nav button').forEach(btn => { btn.onclick = function(e) { let pg = this.dataset.page; setPage(pg); }; });
             let currentReportMonth = new Date(); currentReportMonth.setDate(1);
             function getTransactionsForMonth(date) { let year = date.getFullYear(), month = date.getMonth(); let start = new Date(year, month, 1).toISOString().split('T')[0]; let end = new Date(year, month + 1, 0).toISOString().split('T')[0]; return transactions.filter(tx => tx.date >= start && tx.date <= end); }
             function generateReportHTML(date) {
@@ -1412,13 +1526,13 @@
             function closeAllCalendars() { document.querySelectorAll('.calendar-popup.open').forEach(p => p.classList.remove('open')); }
             document.addEventListener('click', function(e) { if (!e.target.closest('.calendar-popup') && !e.target.closest('.calendar-icon')) closeAllCalendars(); });
             document.addEventListener('click', function(e) { if (!e.target.closest('.budget-dropdown') && !e.target.closest('#budgetCatBtn') && !e.target.closest('#budgetPeriodBtn')) { document.getElementById('budgetDropdown').classList.remove('open'); document.getElementById('periodDropdown').classList.remove('open'); } });
-            document.getElementById('summaryPrev').onclick = () => { summaryMonthOffset--; refreshCurrentPage(); };
-            document.getElementById('summaryNext').onclick = () => { if (summaryMonthOffset < 0) { summaryMonthOffset++; refreshCurrentPage(); } };
+            document.getElementById('summaryPrev').onclick = () => { summaryMonthOffset--; document.getElementById('monthFilter').value = ''; refreshCurrentPage(); };
+            document.getElementById('summaryNext').onclick = () => { if (summaryMonthOffset < 0) { summaryMonthOffset++; document.getElementById('monthFilter').value = ''; refreshCurrentPage(); } };
             document.getElementById('budgetPrev').onclick = () => { budgetNavMonthOffset--; budgetOffset = budgetNavMonthOffset; budgetPeriod = 'monthly'; budgetCustomDate = null; refreshCurrentPage(); };
             document.getElementById('budgetNext').onclick = () => { budgetNavMonthOffset++; budgetOffset = budgetNavMonthOffset; budgetPeriod = 'monthly'; budgetCustomDate = null; refreshCurrentPage(); };
-            document.getElementById('searchInput').addEventListener('input', () => { if (currentActivePage === 'home') ub(); });
-            document.getElementById('monthFilter').addEventListener('change', () => { if (currentActivePage === 'home') ub(); });
-            document.getElementById('btnResetMonth').onclick = () => { document.getElementById('monthFilter').value = ''; if (currentActivePage === 'home') ub(); };
+            document.getElementById('searchInput').addEventListener('input', () => { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } });
+            document.getElementById('monthFilter').addEventListener('change', () => { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } });
+            document.getElementById('btnResetMonth').onclick = () => { document.getElementById('monthFilter').value = ''; document.getElementById('searchInput').value = ''; if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } };
             document.querySelectorAll('.modal').forEach(m => { m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('open'); }); });
             setPage('home');
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hisab-khata-v2'; // আগের ভার্সন থেকে বাড়ান (v1 → v2)
+const CACHE_NAME = 'hisab-khata-v3'; // আগের ভার্সন থেকে বাড়ান (v2 → v3)
 const urlsToCache = [
   '/',
   'index.html',
