@@ -318,7 +318,6 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
-        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শুরু) ---------- */
         .budget-cat-btn,
         .budget-period-btn {
             padding: 6px 12px;
@@ -339,7 +338,6 @@
             font-weight: 700;
             font-size: 11px;
         }
-        /* ---------- বাজেট ও সারাংশ বক্সের বাটন সাইজ ছোট করা হয়েছে (শেষ) ---------- */
         .month-nav-row {
             display: flex;
             align-items: center;
@@ -368,7 +366,6 @@
             color: var(--text);
             transform: skewX(-12deg);
         }
-        /* লেনদেন পৃষ্ঠার নেভিগেশন বাটন ব্যাকগ্রাউন্ড স্বচ্ছ */
         .month-trans-nav .nav-group button {
             background: transparent !important;
             border: 1px solid var(--border);
@@ -1124,7 +1121,18 @@
 
     <div class="modal" id="modalTx"><div class="modal-box"><h3 id="txTitle">নতুন লেনদেন</h3><div class="date-widget" id="txDateWidget"><button class="date-arrow prev">◀</button><span class="date-text" id="txDateText">DD-MM-YYYY</span><button class="date-arrow next">▶</button><span class="calendar-icon" id="txCalendarIcon">📅</span><div class="calendar-popup" id="txDateCalendarPopup"></div></div><input type="text" id="txDesc" placeholder="বিবরণ"><input type="number" id="txAmount" placeholder="পরিমাণ (টাকা)" min="0" step="0.01"><div class="type-toggle"><button id="btnTypeExpense" class="active">ব্যয়</button><button id="btnTypeIncome">আয়</button></div><div style="display:flex;gap:6px; align-items:center;"><div class="parallelogram-input-container"><select id="txCategory" class="parallelogram-input"></select></div><button class="btn btn-blue" id="btnAddCat" style="min-width:44px;">+</button></div><div style="display:flex;gap:6px; align-items:center; margin-top:6px;"><div class="file-parallelogram-container"><input type="file" id="txImage" accept="image/*" class="file-parallelogram-input"></div><button class="btn btn-green" id="btnCamera" style="min-width:44px;">📷</button></div><div class="image-preview" id="imagePreview"></div><textarea id="txNote" rows="2" placeholder="নোট (ঐচ্ছিক)"></textarea><div class="modal-actions"><button class="btn" id="btnCancelTx">বাতিল</button><button class="btn btn-blue" id="btnSaveTx">সংরক্ষণ</button></div></div></div>
     <div class="modal" id="modalImageView"><div class="modal-box" style="text-align:center;"><h3>📋 রশিদ ছবি</h3><img id="viewImage" style="max-width:100%;max-height:300px;"><div class="modal-actions"><button class="btn btn-green" id="btnSaveImage">💾 ডাউনলোড</button><button class="btn" id="btnCloseImage">বন্ধ</button></div></div></div>
-    <div class="modal" id="modalTools"><div class="modal-box"><h3>🔧 টুলস</h3><div><h4 style="margin:8px 0;font-size:13px;font-weight:700;">⚡ এক্সট্রা</h4><div style="display:flex;gap:6px;"><input type="date" id="extraDate" style="flex:1;"><input type="number" id="extraAmount" placeholder="টাকা" style="width:100px;"><button class="btn btn-blue" id="btnAddExtra">➕</button></div><div id="extraList"></div><div>মোট: <span id="extraTotal">0</span></div><button class="btn btn-red" id="btnClearExtra">পরিষ্কার</button></div><div style="margin-top:16px;"><h4 style="font-size:13px;font-weight:700;">💰 দেনা-পাওনা</h4><div class="tab-row"><div class="tab active" data-dtab="debt">দেনা</div><div class="tab" data-dtab="credit">পাওনা</div></div><div class="tab-content active" id="dtab-debt"><div style="display:flex;gap:4px;"><input type="text" id="debtName" placeholder="নাম" style="flex:1;"><input type="number" id="debtAmount" placeholder="টাকা" style="width:90px;"><button class="btn btn-red" id="btnAddDebt">➕</button></div><div id="debtList"></div><div>মোট: <b><span id="debtTotal">0</span></b></div></div><div class="tab-content" id="dtab-credit"><div style="display:flex;gap:4px;"><input type="text" id="creditName" placeholder="নাম" style="flex:1;"><input type="number" id="creditAmount" placeholder="টাকা" style="width:90px;"><button class="btn btn-green" id="btnAddCredit">➕</button></div><div id="creditList"></div><div>মোট: <b><span id="creditTotal">0</span></b></div></div></div><div style="margin-top:16px;"><h4 style="font-size:13px;font-weight:700;">📝 খসড়া</h4><div style="display:flex;gap:6px;"><input type="text" id="draftItem" placeholder="আইটেম" style="flex:1;"><input type="number" id="draftAmount" placeholder="টাকা" style="width:100px;"><button class="btn btn-purple" id="btnAddDraft">➕</button></div><div id="draftList"></div><div>মোট: <b><span id="draftTotal">0</span></b></div><button class="btn btn-red" id="btnClearDraft">পরিষ্কার</button></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;"><button class="btn btn-blue" id="btnExportCSV">📥 CSV</button><button class="btn btn-blue" id="btnBackup">💾 ব্যাকআপ</button><button class="btn btn-blue" id="btnRestore">📂 পুনরুদ্ধার</button><button class="btn btn-red" id="btnClearAll">🗑️ সব মুছুন</button></div><input type="file" id="backupFile" accept=".json" style="display:none;"><div class="modal-actions"><button class="btn" id="btnCloseTools">বন্ধ</button></div></div></div>
+    <div class="modal" id="modalTools"><div class="modal-box"><h3>🔧 টুলস</h3>
+        <!-- হোম ইন্টারফেস সাইজ কন্ট্রোল (নতুন ফিচার) -->
+        <div style="margin-bottom: 20px; background: var(--primary-light); padding: 12px; border-left: 3px solid var(--accent);">
+            <h4 style="font-size:13px;font-weight:800; margin-bottom:8px;">🏠 হোম ইন্টারফেস সাইজ</h4>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <input type="range" id="homeScaleSlider" min="40" max="100" step="1" value="100" style="flex:2;">
+                <span id="scalePercentLabel" style="font-weight:700; min-width: 60px;">100%</span>
+                <button id="resetHomeScaleBtn" class="btn btn-gray" style="padding:6px 12px;">রিসেট</button>
+            </div>
+            <p class="info-text" style="font-size:11px; margin-top:6px;">হোম পেজের আকার কমানো/বাড়ানো (40% - 100%)</p>
+        </div>
+        <div><h4 style="margin:8px 0;font-size:13px;font-weight:700;">⚡ এক্সট্রা</h4><div style="display:flex;gap:6px;"><input type="date" id="extraDate" style="flex:1;"><input type="number" id="extraAmount" placeholder="টাকা" style="width:100px;"><button class="btn btn-blue" id="btnAddExtra">➕</button></div><div id="extraList"></div><div>মোট: <span id="extraTotal">0</span></div><button class="btn btn-red" id="btnClearExtra">পরিষ্কার</button></div><div style="margin-top:16px;"><h4 style="font-size:13px;font-weight:700;">💰 দেনা-পাওনা</h4><div class="tab-row"><div class="tab active" data-dtab="debt">দেনা</div><div class="tab" data-dtab="credit">পাওনা</div></div><div class="tab-content active" id="dtab-debt"><div style="display:flex;gap:4px;"><input type="text" id="debtName" placeholder="নাম" style="flex:1;"><input type="number" id="debtAmount" placeholder="টাকা" style="width:90px;"><button class="btn btn-red" id="btnAddDebt">➕</button></div><div id="debtList"></div><div>মোট: <b><span id="debtTotal">0</span></b></div></div><div class="tab-content" id="dtab-credit"><div style="display:flex;gap:4px;"><input type="text" id="creditName" placeholder="নাম" style="flex:1;"><input type="number" id="creditAmount" placeholder="টাকা" style="width:90px;"><button class="btn btn-green" id="btnAddCredit">➕</button></div><div id="creditList"></div><div>মোট: <b><span id="creditTotal">0</span></b></div></div></div><div style="margin-top:16px;"><h4 style="font-size:13px;font-weight:700;">📝 খসড়া</h4><div style="display:flex;gap:6px;"><input type="text" id="draftItem" placeholder="আইটেম" style="flex:1;"><input type="number" id="draftAmount" placeholder="টাকা" style="width:100px;"><button class="btn btn-purple" id="btnAddDraft">➕</button></div><div id="draftList"></div><div>মোট: <b><span id="draftTotal">0</span></b></div><button class="btn btn-red" id="btnClearDraft">পরিষ্কার</button></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;"><button class="btn btn-blue" id="btnExportCSV">📥 CSV</button><button class="btn btn-blue" id="btnBackup">💾 ব্যাকআপ</button><button class="btn btn-blue" id="btnRestore">📂 পুনরুদ্ধার</button><button class="btn btn-red" id="btnClearAll">🗑️ সব মুছুন</button></div><input type="file" id="backupFile" accept=".json" style="display:none;"><div class="modal-actions"><button class="btn" id="btnCloseTools">বন্ধ</button></div></div></div>
 
     <div class="modal" id="modalReport">
         <div class="modal-box">
@@ -1166,7 +1174,7 @@
     <script>
         (function() {
             const LS = { tx: 'pwa_ledger_tx', budget: 'pwa_ledger_budget', dark: 'pwa_ledger_dark', extra: 'pwa_ledger_extra',
-                debt: 'pwa_ledger_debt', draft: 'pwa_ledger_draft', lastCat: 'pwa_ledger_lastCat', categories: 'pwa_ledger_categories' };
+                debt: 'pwa_ledger_debt', draft: 'pwa_ledger_draft', lastCat: 'pwa_ledger_lastCat', categories: 'pwa_ledger_categories', homeScale: 'pwa_home_scale_percent' };
 
             function g(k, d) { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } }
             function s(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
@@ -1351,12 +1359,53 @@
                     <tbody>${rows}</tbody>
                     <tfoot><tr><td colspan="2"><strong>মোট</strong></td><td class="income-amount"><strong>${fm(totalInc)}</strong></td><td class="expense-amount"><strong>${fm(totalExp)}</strong></td><td></td></tr>
                     <tr><td colspan="2"><strong>উদ্বৃত্ত</strong></td><td colspan="2"><strong>${fm(balance)}</strong></td><td></td></tr></tfoot>
-                </table>`;
+                 </table>`;
                 container.innerHTML = html;
                 document.querySelectorAll('.tx-edit-btn').forEach(btn => btn.onclick = (e) => { let tx = transactions.find(t => t.id === btn.dataset.id); if (tx) et(tx); });
                 document.querySelectorAll('.tx-delete-btn').forEach(btn => btn.onclick = (e) => { if (confirm('মুছে ফেলবেন?')) { transactions = transactions.filter(t => t.id !== btn.dataset.id); IMG.delete(btn.dataset.id); s(LS.tx, transactions); refreshCurrentPage(); } });
             }
-            function refreshCurrentPage() { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } else if (currentActivePage === 'transactions') renderMonthTransactions(); }
+            function applyHomeScale() {
+                const percent = parseFloat(localStorage.getItem(LS.homeScale) || '100');
+                const scale = percent / 100;
+                const homeElements = ['.top-boxes', '.controls', '.tx-list'];
+                if (currentActivePage === 'home') {
+                    homeElements.forEach(sel => {
+                        const el = document.querySelector(sel);
+                        if (el) {
+                            el.style.transform = `scale(${scale})`;
+                            el.style.transformOrigin = 'top left';
+                            el.style.transition = 'transform 0.2s ease';
+                            el.style.width = `${100 / scale}%`;
+                        }
+                    });
+                } else {
+                    homeElements.forEach(sel => {
+                        const el = document.querySelector(sel);
+                        if (el) {
+                            el.style.transform = '';
+                            el.style.width = '';
+                        }
+                    });
+                }
+                const slider = document.getElementById('homeScaleSlider');
+                const label = document.getElementById('scalePercentLabel');
+                if (slider && label) {
+                    slider.value = percent;
+                    label.innerText = percent + '%';
+                }
+            }
+            window.setHomeInterfaceScale = function(percent) {
+                let p = Number(percent);
+                if (isNaN(p)) return;
+                p = Math.min(100, Math.max(40, p));
+                localStorage.setItem(LS.homeScale, p);
+                applyHomeScale();
+                if (currentActivePage === 'home') {
+                    ub();
+                    renderHomeTransactions();
+                }
+            };
+            function refreshCurrentPage() { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); applyHomeScale(); } else if (currentActivePage === 'transactions') renderMonthTransactions(); }
             function setPage(page) { 
                 const topBoxes = document.querySelector('.top-boxes'); 
                 const controls = document.querySelector('.controls'); 
@@ -1368,6 +1417,7 @@
                     currentActivePage = 'home'; 
                     ub(); 
                     renderHomeTransactions(); 
+                    applyHomeScale();
                 } else if (page === 'transactions') { 
                     topBoxes.style.display = 'none'; 
                     controls.style.display = 'none'; 
@@ -1375,6 +1425,7 @@
                     currentActivePage = 'transactions'; 
                     transMonthOffset = 0; 
                     renderMonthTransactions(); 
+                    applyHomeScale();
                 } else if (page === 'add') { ot(); return; } 
                   else if (page === 'report') { orp(); return; } 
                   else if (page === 'tools') { otl(); return; } 
@@ -1397,10 +1448,10 @@
                 if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
                     let currentIndex = pageOrder.indexOf(currentActivePage);
                     if (currentIndex === -1) return;
-                    if (dx < 0) { // swipe left -> next page
+                    if (dx < 0) { 
                         let nextIndex = (currentIndex + 1) % pageOrder.length;
                         setPage(pageOrder[nextIndex]);
-                    } else { // swipe right -> previous page
+                    } else { 
                         let prevIndex = (currentIndex - 1 + pageOrder.length) % pageOrder.length;
                         setPage(pageOrder[prevIndex]);
                     }
@@ -1469,7 +1520,7 @@
                         <tbody>${rows || '<tr><td colspan="4" style="text-align:center;">কোনো লেনদেন নেই</td></tr>'}</tbody>
                         <tfoot><tr style="background:var(--primary-light);"><td colspan="2"><strong>মোট</strong></td><td class="income-amount"><strong>${fm(totalIncome)}</strong></td><td class="expense-amount"><strong>${fm(totalExpense)}</strong></td></tr>
                         <tr><td colspan="2"><strong>উদ্বৃত্ত</strong></td><td colspan="2"><strong>${fm(balanceTotal)}</strong></td></tr></tfoot>
-                    </table>
+                     </table>
                 `;
                 return `<h3 style="margin-bottom:16px;">📋 ${monthName} - সম্পূর্ণ হিসাব</h3>${summaryCardsHtml}${categoryGridHtml}${transactionTable}`;
             }
@@ -1534,150 +1585,56 @@
             document.getElementById('monthFilter').addEventListener('change', () => { if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } });
             document.getElementById('btnResetMonth').onclick = () => { document.getElementById('monthFilter').value = ''; document.getElementById('searchInput').value = ''; if (currentActivePage === 'home') { ub(); renderHomeTransactions(); } };
             document.querySelectorAll('.modal').forEach(m => { m.addEventListener('click', function(e) { if (e.target === m) m.classList.remove('open'); }); });
-            setPage('home');
-
-            // ========== রিমোট কন্ট্রোল ফাংশন (পূর্ণ) ==========
+            
+            // হোম স্কেল কন্ট্রোল UI সংযোগ
+            const scaleSlider = document.getElementById('homeScaleSlider');
+            const resetScaleBtn = document.getElementById('resetHomeScaleBtn');
+            if (scaleSlider) {
+                const savedScale = localStorage.getItem(LS.homeScale);
+                if (savedScale) scaleSlider.value = savedScale;
+                else scaleSlider.value = 100;
+                scaleSlider.addEventListener('input', (e) => {
+                    let val = parseInt(e.target.value);
+                    document.getElementById('scalePercentLabel').innerText = val + '%';
+                    localStorage.setItem(LS.homeScale, val);
+                    if (currentActivePage === 'home') {
+                        applyHomeScale();
+                        ub();
+                        renderHomeTransactions();
+                    }
+                });
+            }
+            if (resetScaleBtn) {
+                resetScaleBtn.addEventListener('click', () => {
+                    localStorage.setItem(LS.homeScale, '100');
+                    if (scaleSlider) scaleSlider.value = '100';
+                    if (document.getElementById('scalePercentLabel')) document.getElementById('scalePercentLabel').innerText = '100%';
+                    if (currentActivePage === 'home') {
+                        applyHomeScale();
+                        ub();
+                        renderHomeTransactions();
+                    }
+                });
+            }
+            // রিমোট কন্ট্রোল (অপরিবর্তিত)
             const APP_VERSION = 'v7.0';
             let remoteConfigUrl = localStorage.getItem('pwa_remote_config_url') || '';
             let remoteCheckInterval = null;
-
-            function fetchRemoteConfig() {
-                if (!remoteConfigUrl) return;
-                fetch(remoteConfigUrl, { cache: 'no-store' })
-                    .then(res => res.json())
-                    .then(config => {
-                        applyRemoteConfig(config);
-                    })
-                    .catch(err => {
-                        console.log('Remote config fetch failed', err);
-                    });
-            }
-
-            function applyRemoteConfig(config) {
-                if (config.appEnabled === false) {
-                    showAppDisabledOverlay();
-                } else {
-                    if (config.disableAfter) {
-                        const disableTime = new Date(config.disableAfter).getTime();
-                        if (Date.now() > disableTime) {
-                            showAppDisabledOverlay();
-                            return;
-                        }
-                    }
-                    hideAppDisabledOverlay();
-                }
-
-                if (config.latestVersion && config.latestVersion !== APP_VERSION && config.forceUpdate) {
-                    showUpdateModal();
-                }
-            }
-
-            function showAppDisabledOverlay() {
-                document.getElementById('appDisabledOverlay').classList.add('show');
-            }
-
-            function hideAppDisabledOverlay() {
-                document.getElementById('appDisabledOverlay').classList.remove('show');
-            }
-
-            function showUpdateModal() {
-                document.getElementById('updateModal').classList.add('show');
-            }
-
-            function hideUpdateModal() {
-                document.getElementById('updateModal').classList.remove('show');
-            }
-
-            function injectRemoteControlUI() {
-                const toolsModal = document.getElementById('modalTools');
-                if (!toolsModal) return;
-                if (document.getElementById('remoteControlSection')) return;
-
-                const section = document.createElement('div');
-                section.id = 'remoteControlSection';
-                section.style.marginTop = '16px';
-                section.innerHTML = `
-                    <h4 style="font-size:13px;font-weight:700; margin-bottom:8px;">🌐 রিমোট কন্ট্রোল</h4>
-                    <div style="display:flex;gap:6px; align-items:center;">
-                        <input type="text" id="remoteUrlInput" placeholder="https://... remote-config.json" style="flex:1;">
-                        <button class="btn btn-blue" id="btnSaveRemoteUrl">💾 সংরক্ষণ</button>
-                    </div>
-                    <p id="remoteStatus" style="font-size:12px; margin-top:6px;"></p>
-                    <button class="btn btn-gray" id="btnManualCheck" style="margin-top:6px; width:100%;">🔍 এখনই চেক করুন</button>
-                `;
-                const modalBox = toolsModal.querySelector('.modal-box');
-                const closeBtn = document.getElementById('btnCloseTools');
-                if (modalBox && closeBtn) {
-                    modalBox.insertBefore(section, closeBtn.parentNode);
-                }
-
-                document.getElementById('btnSaveRemoteUrl').addEventListener('click', function() {
-                    const url = document.getElementById('remoteUrlInput').value.trim();
-                    if (url) {
-                        remoteConfigUrl = url;
-                        localStorage.setItem('pwa_remote_config_url', url);
-                        document.getElementById('remoteStatus').textContent = '✅ URL সংরক্ষিত। চেক চলছে...';
-                        fetchRemoteConfig();
-                        restartRemoteInterval();
-                    } else {
-                        alert('দয়া করে একটি বৈধ URL দিন');
-                    }
-                });
-
-                document.getElementById('btnManualCheck').addEventListener('click', () => {
-                    if (remoteConfigUrl) {
-                        document.getElementById('remoteStatus').textContent = '⏳ চেক করা হচ্ছে...';
-                        fetchRemoteConfig();
-                    } else {
-                        alert('প্রথমে রিমোট URL সংরক্ষণ করুন');
-                    }
-                });
-
-                if (remoteConfigUrl) {
-                    document.getElementById('remoteUrlInput').value = remoteConfigUrl;
-                    document.getElementById('remoteStatus').textContent = '✅ URL সংরক্ষিত আছে';
-                }
-            }
-
-            document.getElementById('retryRemoteCheck')?.addEventListener('click', () => {
-                fetchRemoteConfig();
-            });
-
-            document.getElementById('btnUpdateNow')?.addEventListener('click', () => {
-                if (window.caches) {
-                    caches.keys().then(names => names.forEach(name => caches.delete(name)));
-                }
-                localStorage.clear();
-                location.reload(true);
-            });
-
-            document.getElementById('btnUpdateLater')?.addEventListener('click', () => {
-                hideUpdateModal();
-            });
-
-            function restartRemoteInterval() {
-                if (remoteCheckInterval) clearInterval(remoteCheckInterval);
-                if (remoteConfigUrl) {
-                    remoteCheckInterval = setInterval(fetchRemoteConfig, 5 * 60 * 1000);
-                }
-            }
-
-            window.addEventListener('load', function() {
-                injectRemoteControlUI();
-                if (remoteConfigUrl) {
-                    fetchRemoteConfig();
-                    restartRemoteInterval();
-                }
-            });
-
+            function fetchRemoteConfig() { if (!remoteConfigUrl) return; fetch(remoteConfigUrl, { cache: 'no-store' }).then(res => res.json()).then(config => { if (config.appEnabled === false) showAppDisabledOverlay(); else { if (config.disableAfter && Date.now() > new Date(config.disableAfter).getTime()) { showAppDisabledOverlay(); return; } hideAppDisabledOverlay(); } if (config.latestVersion && config.latestVersion !== APP_VERSION && config.forceUpdate) showUpdateModal(); }).catch(err => console.log('Remote config fetch failed', err)); }
+            function showAppDisabledOverlay() { document.getElementById('appDisabledOverlay').classList.add('show'); }
+            function hideAppDisabledOverlay() { document.getElementById('appDisabledOverlay').classList.remove('show'); }
+            function showUpdateModal() { document.getElementById('updateModal').classList.add('show'); }
+            function hideUpdateModal() { document.getElementById('updateModal').classList.remove('show'); }
+            function injectRemoteControlUI() { const toolsModal = document.getElementById('modalTools'); if (!toolsModal || document.getElementById('remoteControlSection')) return; const section = document.createElement('div'); section.id = 'remoteControlSection'; section.style.marginTop = '16px'; section.innerHTML = `<h4 style="font-size:13px;font-weight:700; margin-bottom:8px;">🌐 রিমোট কন্ট্রোল</h4><div style="display:flex;gap:6px; align-items:center;"><input type="text" id="remoteUrlInput" placeholder="https://... remote-config.json" style="flex:1;"><button class="btn btn-blue" id="btnSaveRemoteUrl">💾 সংরক্ষণ</button></div><p id="remoteStatus" style="font-size:12px; margin-top:6px;"></p><button class="btn btn-gray" id="btnManualCheck" style="margin-top:6px; width:100%;">🔍 এখনই চেক করুন</button>`; const modalBox = toolsModal.querySelector('.modal-box'); const closeBtn = document.getElementById('btnCloseTools'); if (modalBox && closeBtn) modalBox.insertBefore(section, closeBtn.parentNode); document.getElementById('btnSaveRemoteUrl').addEventListener('click', function() { const url = document.getElementById('remoteUrlInput').value.trim(); if (url) { remoteConfigUrl = url; localStorage.setItem('pwa_remote_config_url', url); document.getElementById('remoteStatus').textContent = '✅ URL সংরক্ষিত। চেক চলছে...'; fetchRemoteConfig(); if (remoteCheckInterval) clearInterval(remoteCheckInterval); remoteCheckInterval = setInterval(fetchRemoteConfig, 5 * 60 * 1000); } else alert('দয়া করে একটি বৈধ URL দিন'); }); document.getElementById('btnManualCheck').addEventListener('click', () => { if (remoteConfigUrl) { document.getElementById('remoteStatus').textContent = '⏳ চেক করা হচ্ছে...'; fetchRemoteConfig(); } else alert('প্রথমে রিমোট URL সংরক্ষণ করুন'); }); if (remoteConfigUrl) { document.getElementById('remoteUrlInput').value = remoteConfigUrl; document.getElementById('remoteStatus').textContent = '✅ URL সংরক্ষিত আছে'; } }
+            document.getElementById('retryRemoteCheck')?.addEventListener('click', () => fetchRemoteConfig());
+            document.getElementById('btnUpdateNow')?.addEventListener('click', () => { if (window.caches) caches.keys().then(names => names.forEach(name => caches.delete(name))); localStorage.clear(); location.reload(true); });
+            document.getElementById('btnUpdateLater')?.addEventListener('click', () => hideUpdateModal());
+            window.addEventListener('load', function() { injectRemoteControlUI(); if (remoteConfigUrl) { fetchRemoteConfig(); if (remoteCheckInterval) clearInterval(remoteCheckInterval); remoteCheckInterval = setInterval(fetchRemoteConfig, 5 * 60 * 1000); } });
             const originalOpenTools = window.otl;
-            window.otl = function() {
-                originalOpenTools && originalOpenTools();
-                injectRemoteControlUI();
-            };
+            window.otl = function() { originalOpenTools && originalOpenTools(); injectRemoteControlUI(); };
+            setPage('home');
         })();
     </script>
-
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
