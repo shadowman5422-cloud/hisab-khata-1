@@ -36,6 +36,7 @@
             --btn-gray-text:  #334155;
             --btn-purple-bg:  #7c3aed;
             --btn-purple-text:#ffffff;
+            --home-scale:     1;
         }
         .dark {
             --primary:        #4a627a;
@@ -1364,12 +1365,13 @@
                 document.querySelectorAll('.tx-edit-btn').forEach(btn => btn.onclick = (e) => { let tx = transactions.find(t => t.id === btn.dataset.id); if (tx) et(tx); });
                 document.querySelectorAll('.tx-delete-btn').forEach(btn => btn.onclick = (e) => { if (confirm('মুছে ফেলবেন?')) { transactions = transactions.filter(t => t.id !== btn.dataset.id); IMG.delete(btn.dataset.id); s(LS.tx, transactions); refreshCurrentPage(); } });
             }
+            // উন্নত স্কেলিং ফাংশন - সব হোম এলিমেন্ট একসাথে স্কেল হবে এবং গ্যাপ/প্যাডিং অনুপাতিক হবে
             function applyHomeScale() {
                 const percent = parseFloat(localStorage.getItem(LS.homeScale) || '100');
                 const scale = percent / 100;
-                const homeElements = ['.top-boxes', '.controls', '.tx-list'];
+                const homeContainers = ['.top-boxes', '.controls', '.tx-list'];
                 if (currentActivePage === 'home') {
-                    homeElements.forEach(sel => {
+                    homeContainers.forEach(sel => {
                         const el = document.querySelector(sel);
                         if (el) {
                             el.style.transform = `scale(${scale})`;
@@ -1378,13 +1380,38 @@
                             el.style.width = `${100 / scale}%`;
                         }
                     });
+                    // স্কেল অনুযায়ী gap এবং padding অ্যাডজাস্ট করুন যাতে সবকিছু আনুপাতিক দেখায়
+                    const topBoxes = document.querySelector('.top-boxes');
+                    if (topBoxes) topBoxes.style.gap = `${16 * scale}px`;
+                    const controlsDiv = document.querySelector('.controls');
+                    if (controlsDiv) controlsDiv.style.gap = `${10 * scale}px`;
+                    const monthNavRows = document.querySelectorAll('.month-nav-row');
+                    monthNavRows.forEach(row => row.style.gap = `${10 * scale}px`);
+                    // বাটনগুলোর প্যাডিং স্কেল করা (ঐচ্ছিক, কিন্তু ব্যবহারকারীর চাহিদা অনুযায়ী)
+                    document.querySelectorAll('.controls input, .controls .btn').forEach(el => {
+                        el.style.padding = `0 ${14 * scale}px`;
+                        el.style.fontSize = `${14 * scale}px`;
+                        el.style.minHeight = `${44 * scale}px`;
+                    });
                 } else {
-                    homeElements.forEach(sel => {
+                    homeContainers.forEach(sel => {
                         const el = document.querySelector(sel);
                         if (el) {
                             el.style.transform = '';
                             el.style.width = '';
                         }
+                    });
+                    // রিসেট
+                    const topBoxes = document.querySelector('.top-boxes');
+                    if (topBoxes) topBoxes.style.gap = '';
+                    const controlsDiv = document.querySelector('.controls');
+                    if (controlsDiv) controlsDiv.style.gap = '';
+                    const monthNavRows = document.querySelectorAll('.month-nav-row');
+                    monthNavRows.forEach(row => row.style.gap = '');
+                    document.querySelectorAll('.controls input, .controls .btn').forEach(el => {
+                        el.style.padding = '';
+                        el.style.fontSize = '';
+                        el.style.minHeight = '';
                     });
                 }
                 const slider = document.getElementById('homeScaleSlider');
